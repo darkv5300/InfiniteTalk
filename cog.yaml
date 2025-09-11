@@ -21,5 +21,6 @@ build:
     - tqdm==4.65.2
     - requests==2.31.0
     - flash-attn==2.5.8
+    - xformers==0.0.22.post7
 
 predict: "predict.py:Predictor"
