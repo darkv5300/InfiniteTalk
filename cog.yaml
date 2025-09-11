@@ -3,19 +3,19 @@ build:
   python_version: "3.10"
   system_packages: ["git", "ffmpeg"]
   python_packages:
-    - torch==2.2.1
-    - torchvision==0.17.1
-    - torchaudio==2.2.1
-    - transformers==4.37.2
-    - accelerate==0.27.2
-    - diffusers==0.26.3
-    - safetensors==0.4.2
-    - einops==0.7.0
-    - easydict==1.10
-    - numpy<2.0
-    - pillow==10.2.0
-    - scipy==1.12.0
-    - librosa==0.10.1
-    - soundfile==0.12.1
+ - torch==2.2.1            # อัพจาก 2.1.0 → 2.2.1
+- torchvision==0.17.1     # อัพจาก 0.16.0 → 0.17.1 (match torch 2.2.1)
+- torchaudio==2.2.1       # อัพจาก 2.1.0 → 2.2.1 (match torch 2.2.1)
+- transformers==4.37.2    # อัพจาก 4.35.2 → 4.37.2 (เข้ากับ torch 2.2+)
+- accelerate==0.27.2      # อัพจาก 0.24.1 → 0.27.2 (fix compatibility)
+- diffusers==0.26.3       # อัพจาก 0.23.1 → 0.26.3 (support torch 2.2+)
+- safetensors==0.4.2      # อัพเล็กน้อย
+- einops==0.7.0           # เท่าเดิม
+- easydict==1.10          # เท่าเดิม
+- numpy<2.0               # เท่าเดิม
+- pillow==10.2.0          # อัพจาก 10.1.0 → 10.2.0
+- scipy==1.12.0           # อัพจาก 1.11.4 → 1.12.0
+- librosa==0.10.1         # เท่าเดิม
+- soundfile==0.12.1       # เท่าเดิม
 
 predict: "predict.py:Predictor"
