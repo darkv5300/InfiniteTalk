@@ -20,7 +20,6 @@ build:
     - soundfile==0.12.1
     - tqdm==4.65.2
     - requests==2.31.0
-    # ใช้ wheel flash-attn ที่ build ไว้แล้ว
     - flash-attn==2.5.8
 
 predict: "predict.py:Predictor"
