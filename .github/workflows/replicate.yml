@@ -16,17 +16,18 @@ jobs:
       
       - name: Install Cog
         run: |
-          # ดาวน์โหลดและติดตั้ง cog แบบ binary โดยตรง
+          # ดาวน์โหลดและติดตั้ง cog
           sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
           sudo chmod +x /usr/local/bin/cog
-          
-          # ตรวจสอบว่าติดตั้งสำเร็จ
           cog --version
       
       - name: Push to Replicate
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
-          # Login และ push
-          cog login --token $REPLICATE_API_TOKEN
+          # วิธีที่ 1: ใช้ environment variable โดยตรง (แนะนำ)
           cog push r8.im/darkv5300/infinitetalk
+          
+          # หรือวิธีที่ 2: ใช้ stdin (ถ้าวิธีที่ 1 ไม่ work)
+          # echo $REPLICATE_API_TOKEN | cog login --token-stdin
+          # cog push r8.im/darkv5300/adverratalk
