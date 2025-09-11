@@ -3,20 +3,6 @@ build:
   python_version: "3.10"
   system_packages: ["git", "ffmpeg"]
   python_packages:
-    - torch==2.2.1
-    - torchvision==0.17.1
-    - torchaudio==2.2.1
-    - transformers==4.37.2
-    - accelerate==0.27.2
-    - diffusers==0.26.3
-    - huggingface_hub==0.13.4   # 👈 fix cached_download error
-    - safetensors==0.4.2
-    - einops==0.7.0
-    - easydict==1.10
-    - numpy<2.0
-    - pillow==10.2.0
-    - scipy==1.12.0
-    - librosa==0.10.1
-    - soundfile==0.12.1
+    - -r requirements.txt
 
 predict: "predict.py:Predictor"
