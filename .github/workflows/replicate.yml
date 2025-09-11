@@ -17,13 +17,13 @@ jobs:
           python3 -m pip install cog
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           export PATH="$HOME/.local/bin:$PATH"
-          which cog
-          cog --version
+          which cog || true
+          cog --version || true
 
       - name: Push to Replicate
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          cog login --token $REPLICATE_API_TOKEN
-          cog push r8.im/darkv5300/adverratalk
+          ~/.local/bin/cog login --token $REPLICATE_API_TOKEN
+          ~/.local/bin/cog push r8.im/darkv5300/adverratalk
