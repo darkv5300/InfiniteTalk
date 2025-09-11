@@ -11,16 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Free disk space
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Huggingface CLI
+        run: pip install huggingface_hub
+
+      - name: Download Models
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          echo "Before cleanup:"
-          df -h
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache
-          sudo apt-get clean
-          echo "After cleanup:"
-          df -h
+          huggingface-cli login --token $HF_TOKEN
+          huggingface-cli download Wan-AI/Wan2.1-I2V-14B-480P --local-dir ./weights/Wan2.1-I2V-14B-480P
+          huggingface-cli download TencentGameMate/chinese-wav2vec2-base --local-dir ./weights/chinese-wav2vec2-base
+          huggingface-cli download MeiGen-AI/InfiniteTalk --local-dir ./weights/InfiniteTalk/single
 
       - name: Setup Cog
         uses: replicate/setup-cog@v2
