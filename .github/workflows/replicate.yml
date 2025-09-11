@@ -1,25 +1,30 @@
-name: Push InfiniteTalk to Replicate
+name: Deploy to Replicate
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  replicate:
+  deploy:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install cog via pip
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install cog
-          cog --version
-
-      - name: Verify Cog Config
-        run: cog check
-
-      - name: Push to Replicate
-        env:
-          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-        run: cog push r8.im/darkv5300/infinitetalk
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Cog
+      run: |
+        sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+        sudo chmod +x /usr/local/bin/cog
+        
+    - name: Build and push to Replicate
+      env:
+        REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+      run: |
+        cog push r8.im/darkv5300/adverratalk2
