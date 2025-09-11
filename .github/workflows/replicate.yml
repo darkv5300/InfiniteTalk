@@ -1,5 +1,4 @@
 name: Push InfiniteTalk to Replicate
-
 on:
   push:
     branches: [ "main" ]   # จะรันทุกครั้งที่ push ไปที่ main
@@ -7,30 +6,32 @@ on:
 jobs:
   replicate:
     runs-on: ubuntu-latest
-
     steps:
       # ดึงโค้ดจาก repo
       - uses: actions/checkout@v4
-
+      
+      # ติดตั้ง Python (ระบุ version ให้ชัดเจน)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
       # ติดตั้ง cog
       - name: Install cog
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install cog --user
+          # ติดตั้ง cog ผ่าน pip
+          pip install cog
           
-          # เพิ่ม path ของ cog เข้าไป
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.local/bin:$PATH"
-
-          # debug: เช็คว่า cog ติดตั้งแล้ว
-          which cog || true
-          cog --version || true
-
+          # ตรวจสอบว่าติดตั้งสำเร็จ
+          cog --version
+      
       # push ไปที่ Replicate
       - name: Push to Replicate
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
+          # Login to Replicate
           cog login --token $REPLICATE_API_TOKEN
-          cog push r8.im/darkv5300/adverratalk
+          
+          # Push model to Replicate
+          cog push r8.im/darkv5300/infinitetalk
