@@ -3,6 +3,7 @@ import torch
 import cv2
 import librosa
 import numpy as np
+import soundfile as sf
 from moviepy.editor import VideoFileClip, AudioFileClip, CompositeVideoClip
 import tempfile
 import os
@@ -50,9 +51,8 @@ class Predictor(BasePredictor):
         
         if duration > 600:  # 10 minutes
             audio = audio[:600 * sr]
-            # บันทึกไฟล์เสียงใหม่
             temp_audio = tempfile.mktemp(suffix='.wav')
-            librosa.output.write_wav(temp_audio, audio, sr)
+            sf.write(temp_audio, audio, sr)  # ใช้ soundfile แทน librosa.output
             return temp_audio
         
         return str(audio_file)
@@ -76,20 +76,10 @@ class Predictor(BasePredictor):
     
     def generate_single_video(self, input_media, audio_file, input_type, width, height, optimization):
         """สร้างวิดีโอคนเดียว"""
-        # ใช้ InfiniteTalk model เดิม + ปรับขนาดเป็น width, height
-        # ใส่โค้ด InfiniteTalk generation ตรงนี้
-        
         output_path = tempfile.mktemp(suffix='.mp4')
         
-        # ตัวอย่างการปรับขนาดวิดีโอ
-        if input_type == 'image':
-            # Image to Video pipeline
-            pass
-        else:
-            # Video to Video pipeline  
-            pass
-            
-        # รวมเสียงกับวิดีโอ
+        # TODO: ใส่โค้ด InfiniteTalk model ตรงนี้
+        # ตอนนี้แค่ mock ตัวรวมเสียง
         video_clip = VideoFileClip("path_to_generated_video")
         audio_clip = AudioFileClip(audio_file)
         
@@ -113,8 +103,8 @@ class Predictor(BasePredictor):
         # บันทึกเสียงแยก
         temp_audio1 = tempfile.mktemp(suffix='.wav')
         temp_audio2 = tempfile.mktemp(suffix='.wav')
-        librosa.output.write_wav(temp_audio1, audio1, sr)
-        librosa.output.write_wav(temp_audio2, audio2, sr)
+        sf.write(temp_audio1, audio1, sr)
+        sf.write(temp_audio2, audio2, sr)
         
         # สร้างวิดีโอแต่ละคน
         video1 = self.generate_single_video(input1, temp_audio1, self.get_media_type(input1), width//2, height, optimization)
@@ -127,19 +117,16 @@ class Predictor(BasePredictor):
         clip2 = VideoFileClip(video2)
         
         if layout == "simultaneous":
-            # วางข้างกัน
             final_video = CompositeVideoClip([
                 clip1.set_position(('left')),
                 clip2.set_position(('right'))
             ], size=(width, height))
         elif layout == "left_to_right":
-            # คนซ้ายก่อน แล้วคนขวา
             final_video = CompositeVideoClip([
                 clip1.set_position(('left')).set_duration(clip1.duration),
                 clip2.set_position(('right')).set_start(clip1.duration)
             ], size=(width, height))
         else:  # right_to_left
-            # คนขวาก่อน แล้วคนซ้าย
             final_video = CompositeVideoClip([
                 clip2.set_position(('right')).set_duration(clip2.duration),
                 clip1.set_position(('left')).set_start(clip2.duration)
