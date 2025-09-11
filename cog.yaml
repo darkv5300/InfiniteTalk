@@ -1,18 +1,23 @@
 build:
   gpu: true
-  python_version: "3.10"
-  system_packages: ["git", "ffmpeg"]
+  cuda: "11.8"
+  system_packages:
+    - "ffmpeg"
+    - "libsm6"
+    - "libxext6"
+    - "libxrender-dev"
+    - "libgl1-mesa-glx"
+  python_version: "3.11"
   python_packages:
-    - torch==2.1.0
-    - "easydict==1.10"   
-    - torchvision
-    - torchaudio
-    - diffusers
-    - transformers
-    - accelerate
-    - safetensors
-    - einops
-    - soundfile
+    - "torch>=2.0.0"
+    - "torchvision"
+    - "torchaudio"
+    - "opencv-python"
+    - "moviepy>=1.0.3"
+    - "librosa>=0.10.0"
+    - "soundfile"
+    - "numpy"
+    - "pillow"
+    - "scipy"
+
 predict: "predict.py:Predictor"
-
-
