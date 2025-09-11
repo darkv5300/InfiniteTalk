@@ -42,5 +42,4 @@ jobs:
           fi
           
           # Push to Replicate
-       cog login
        cog push r8.im/darkv5300/adverratalk
