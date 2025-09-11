@@ -1,4 +1,3 @@
-# .github/workflows/replicate.yml
 name: Push InfiniteTalk to Replicate
 on:
   push:
