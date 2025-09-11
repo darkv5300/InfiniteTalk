@@ -1,13 +1,7 @@
 build:
   gpu: true
   cuda: "11.8"
-  system_packages:
-    - ffmpeg
-    - libsm6
-    - libxext6
-    - libxrender-dev
-    - libgl1-mesa-glx
-  python_version: "3.11"
+  python_version: "3.10"
   python_requirements: requirements.txt
 
 predict: "predict.py:Predictor"
