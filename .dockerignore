@@ -1,0 +1,9 @@
+# .dockerignore
+__pycache__
+*.pyc
+.git
+.github
+*.md
+.gitignore
+.DS_Store
+*.log
