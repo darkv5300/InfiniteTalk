@@ -14,4 +14,3 @@ build:
     - "librosa==0.10.1"
     - "soundfile==0.12.1"
     - "easydict==1.10"
-predict: "predict.py:Predictor"
