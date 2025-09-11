@@ -1,12 +1,29 @@
-import cog
-from infinitetalk import InfiniteTalk # ต้องเช็ค module ที่ repo ใช้จริง
+# predict.py
+from cog import BasePredictor, Input, Path
+import torch
+from typing import Any
 
-class Predictor(cog.BasePredictor):
-    def setup(self):
-        self.model = InfiniteTalk.load_default()
-
-    def predict(self, audio: cog.Path = None, text: str = "Hello world") -> str:
-        # ตรงนี้มึงต้องปรับตามฟังก์ชันจริง
-        output_path = "output.mp4"
-        self.model.generate(audio, text, output_path)
-        return output_path
+class Predictor(BasePredictor):
+    def setup(self) -> None:
+        """Load the model into memory to make predictions faster"""
+        # โหลดโมเดลที่นี่
+        # ตัวอย่าง:
+        # self.model = YourModel()
+        # self.model.load_state_dict(torch.load("weights.pth"))
+        print("Model loaded successfully")
+    
+    def predict(
+        self,
+        prompt: str = Input(
+            description="Input text prompt",
+            default="Hello"
+        ),
+        # เพิ่ม parameters อื่นๆ ตามที่ต้องการ
+    ) -> str:
+        """Run a single prediction on the model"""
+        # รันโมเดลที่นี่
+        # ตัวอย่าง:
+        # output = self.model.generate(prompt)
+        
+        # ตอนนี้ return ค่า dummy ไปก่อน
+        return f"Response to: {prompt}"
