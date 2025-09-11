@@ -3,22 +3,16 @@ build:
   python_version: "3.10"
   system_packages: ["git", "ffmpeg"]
   python_packages:
-    # Torch stack ที่ match กัน
     - torch==2.2.1
     - torchvision==0.17.1
     - torchaudio==2.2.1
-
-    # Huggingface ecosystem
     - transformers==4.37.2
     - accelerate==0.27.2
     - diffusers==0.26.3
+    - huggingface_hub==0.13.4   # 👈 fix cached_download error
     - safetensors==0.4.2
-
-    # Utils ที่ InfiniteTalk / Wan ใช้
     - einops==0.7.0
     - easydict==1.10
-
-    # Core scientific stack (numpy fix <2)
     - numpy<2.0
     - pillow==10.2.0
     - scipy==1.12.0
