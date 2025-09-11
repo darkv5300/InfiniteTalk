@@ -4,6 +4,7 @@ build:
   system_packages: ["git", "ffmpeg"]
   python_packages:
     - torch==2.1.0
+    - "easydict==1.10"   # 👈 เพิ่มอันนี้
     - torchvision
     - torchaudio
     - diffusers
