@@ -2,8 +2,21 @@ build:
   gpu: true
   python_version: "3.10"
   system_packages: ["git", "ffmpeg"]
-  run:
-    - pip install --upgrade pip setuptools wheel
-    - pip install --use-deprecated=legacy-resolver -r requirements.txt
+  python_packages:
+    - torch==2.1.0
+    - torchvision==0.16.0
+    - torchaudio==2.1.0
+    - transformers==4.35.2
+    - accelerate==0.24.1
+    - diffusers==0.23.1
+    - safetensors==0.4.1
+    - einops==0.7.0
+    - easydict==1.10
+    - numpy<2.0
+    - pillow==10.1.0
+    - scipy==1.11.4
+    - librosa==0.10.1
+    - soundfile==0.12.1
+    - huggingface_hub==0.13.4
 
 predict: "predict.py:Predictor"
