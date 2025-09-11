@@ -1,21 +1,36 @@
-opencv-python>=4.9.0.80
-diffusers>=0.31.0
+# Core deep learning
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+
+# HuggingFace stack
 transformers>=4.49.0
 tokenizers>=0.20.3
 accelerate>=1.1.1
-tqdm
-imageio
+
+# Model utils
 easydict
-ftfy
-dashscope
-imageio-ffmpeg
-scikit-image   
-loguru
-gradio>=5.0.0
-numpy>=1.23.5,<2
-xfuser>=0.4.1
+omegaconf
+einops
 pyloudnorm
-optimum-quanto==0.2.6
-scenedetect
+librosa
+soundfile
+xformers==0.0.28
+flash-attn==2.7.4.post1
+
+# Image/Video
+opencv-python>=4.9.0.80
+imageio
+imageio-ffmpeg
+scikit-image
 moviepy==1.0.3
 decord
+scenedetect
+
+# Other utils
+tqdm
+ftfy
+loguru
+gradio>=5.0.0
+dashscope
+optimum-quanto==0.2.6
