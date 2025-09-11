@@ -21,4 +21,4 @@ jobs:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
           echo $REPLICATE_API_TOKEN | cog login --token-stdin
-          cog push r8.im/darkv5300/adverratalk
+          cog push r8.im/darkv5300/adverratal
