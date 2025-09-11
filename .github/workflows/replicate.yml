@@ -2,17 +2,21 @@ name: Push InfiniteTalk to Replicate
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]   # เวลามี push เข้า main branch มันจะ run
 
 jobs:
   replicate:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Install cog
         run: |
           pip install cog
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/bin:$PATH"
+          cog --version   # เช็คว่า cog ใช้งานได้
 
       - name: Push to Replicate
         env:
