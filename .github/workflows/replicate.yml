@@ -9,29 +9,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # ดึงโค้ดจาก repo
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Install Huggingface CLI
-        run: pip install huggingface_hub
-
-      - name: Download Models
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          huggingface-cli login --token $HF_TOKEN
-          huggingface-cli download Wan-AI/Wan2.1-I2V-14B-480P --local-dir ./weights/Wan2.1-I2V-14B-480P
-          huggingface-cli download TencentGameMate/chinese-wav2vec2-base --local-dir ./weights/chinese-wav2vec2-base
-          huggingface-cli download MeiGen-AI/InfiniteTalk --local-dir ./weights/InfiniteTalk/single
-
+      # ติดตั้ง Cog CLI และ Auth เข้ากับ Replicate
       - name: Setup Cog
         uses: replicate/setup-cog@v2
         with:
           token: ${{ secrets.REPLICATE_API_TOKEN }}
 
+      # Push model ไปที่ Replicate
       - name: Push model
         run: cog push r8.im/darkv5300/adverratalk2
