@@ -5,7 +5,7 @@ torchaudio==2.1.0
 transformers==4.35.2
 diffusers==0.23.1
 accelerate==0.24.1
-huggingface_hub==0.20.3   # ✅ อัพเป็นเวอร์ชันใหม่ที่เข้ากับ transformers
+huggingface_hub==0.20.3
 safetensors==0.4.1
 
 einops==0.7.0
@@ -16,5 +16,6 @@ scipy==1.11.4
 librosa==0.10.1
 soundfile==0.12.1
 
+xfuser==0.0.5   # ✅ เพิ่ม lib ที่หาย
 tqdm==4.65.2
 requests==2.31.0
