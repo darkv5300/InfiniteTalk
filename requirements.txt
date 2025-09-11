@@ -15,5 +15,3 @@ librosa==0.10.1
 soundfile==0.12.1
 tqdm==4.65.2
 requests==2.31.0
-flash-attn
-git+https://github.com/facebookresearch/xfuser.git
