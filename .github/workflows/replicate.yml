@@ -10,22 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Cog
+      - name: Install Cog (via script)
         run: |
-          python3 -m pip install --upgrade pip
-          pip install cog
-          echo "PATH after pip install:"
-          echo $PATH
+          curl -s https://replicate.github.io/codespaces/scripts/install-cog.sh | bash
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/bin:$PATH"
           which cog
           cog --version
 
       - name: Push to Replicate
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-          PATH: /home/runner/.local/bin:/usr/local/bin:/usr/bin:/bin
         run: |
-          echo "PATH before push:"
-          echo $PATH
-          which cog
+          export PATH="$HOME/.local/bin:$PATH"
           cog login --token $REPLICATE_API_TOKEN
           cog push r8.im/darkv5300/adverratalk
