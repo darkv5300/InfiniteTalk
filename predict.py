@@ -1,12 +1,14 @@
 # predict.py
 from cog import BasePredictor, Input, Path
-import subprocess, torchaudio, os, mimetypes, json, math
+import subprocess, torchaudio, mimetypes, json
 
+# ==== Weights ====
 WAN_CKPT_DIR = "weights/Wan2.1-I2V-14B-480P"
 WAV2VEC_DIR  = "weights/chinese-wav2vec2-base"
 IT_SINGLE    = "weights/InfiniteTalk/single/infinitetalk.safetensors"
 IT_MULTI     = "weights/InfiniteTalk/multi/infinitetalk.safetensors"
 
+# ==== Policy ====
 CLIP_THRESHOLD_SEC = 60        # < 1 นาที → clip
 MAX_DURATION_SEC   = 600       # จำกัด 10 นาที
 DEFAULT_FPS        = 25
@@ -16,8 +18,7 @@ def is_video(path_str: str) -> bool:
     return (mt or "").startswith("video")
 
 def nearest_4n_plus_1_leq(x: int) -> int:
-    # คืนค่าใกล้สุดที่เป็น 4n+1 และไม่เกิน x (อย่างน้อย 5 เฟรม)
-    if x < 5: 
+    if x < 5:
         return 5
     n = (x - 1) // 4
     return 4 * n + 1
@@ -28,7 +29,8 @@ class Predictor(BasePredictor):
 
     def predict(
         self,
-        audio: Path = Input(description="ไฟล์เสียง (mp3/wav)"),
+        audio1: Path = Input(description="ไฟล์เสียงคนที่ 1 (mp3/wav)"),
+        audio2: Path = Input(description="ไฟล์เสียงคนที่ 2 (เฉพาะโหมด multi)", default=None),
         media: Path = Input(description="รูปภาพหรือวิดีโอ"),
         persons: str = Input(
             description="เลือกโหมด คนเดียว หรือ หลายคน",
@@ -41,28 +43,27 @@ class Predictor(BasePredictor):
             default="480p"
         ),
         fps: int = Input(description="Frames per second", default=DEFAULT_FPS, ge=1, le=60),
-        audio_type: str = Input(
-            description="(เฉพาะหลายคน) 'para'=พูดพร้อมกัน, 'add'=ต่อคิว",
-            choices=["para", "add"],
-            default="para"
+        multi_mode: str = Input(
+            description="(เฉพาะ multi) เลือกลำดับการพูด",
+            choices=["left-right", "right-left", "together"],
+            default="together"
         ),
         prompt: str = Input(description="ข้อความกำกับ (optional)", default=""),
     ) -> Path:
 
-        # ---- คำนวณความยาวเสียง ----
-        info = torchaudio.info(str(audio))
+        # ---- ความยาวเสียง ----
+        info = torchaudio.info(str(audio1))
         duration_sec = info.num_frames / info.sample_rate
         if duration_sec > MAX_DURATION_SEC:
-            print(f"[warn] Audio {duration_sec:.1f}s > {MAX_DURATION_SEC}s → ตัดที่ 10 นาที")
+            print(f"[warn] Audio {duration_sec:.1f}s > {MAX_DURATION_SEC}s → จะตัดที่ 10 นาที")
             duration_sec = MAX_DURATION_SEC
 
-        # เฟรมตามเสียง
         max_frames = int(duration_sec * fps)
 
-        # ---- โหมด gen อัตโนมัติ ----
+        # ---- auto mode ----
         mode = "clip" if duration_sec < CLIP_THRESHOLD_SEC else "streaming"
 
-        # ---- steps แบบเน้นบาลานซ์คุณภาพ/ความเร็ว ----
+        # ---- dynamic steps ----
         if duration_sec < 60:
             steps = "20"
         elif duration_sec < 300:
@@ -70,42 +71,55 @@ class Predictor(BasePredictor):
         else:
             steps = "60"
 
-        # ---- ความละเอียด ----
+        # ---- resolution ----
         size_flag = "infinitetalk-480" if resolution == "480p" else "infinitetalk-720"
 
-        # ---- เลือก checkpoint ----
+        # ---- checkpoint ----
         ckpt = IT_MULTI if persons == "multi" else IT_SINGLE
 
-        # ---- เตรียม input.json ตามสเปค generate_infinitetalk.py ----
-        input_json = "/tmp/input.json"
-        cond_audio = {"person1": str(audio)}  # single เป็นค่าเริ่มต้น
-
-        # NOTE: ถ้าจะรองรับอัพโหลดเสียงคนที่ 2 ผ่าน Cog ให้เพิ่มพารามฯ อีกตัวแล้วเติม cond_audio["person2"] ตรงนี้
+        # ---- สร้าง input.json ----
+        cond_audio = {"person1": str(audio1)}
         input_payload = {
             "prompt": prompt,
-            "cond_video": str(media),      # รับได้ทั้ง image หรือ video
+            "cond_video": str(media),
             "cond_audio": cond_audio
         }
-        if persons == "multi":
-            input_payload["audio_type"] = audio_type  # "para" หรือ "add"
 
+        if persons == "multi":
+            if audio2 is None:
+                raise ValueError("ต้องใส่ไฟล์เสียงของคนที่ 2 ด้วยเมื่อเลือกโหมด multi")
+
+            if multi_mode == "together":
+                input_payload["audio_type"] = "para"
+                cond_audio["person2"] = str(audio2)
+
+            elif multi_mode == "left-right":
+                input_payload["audio_type"] = "add"
+                cond_audio["person1"] = str(audio1)
+                cond_audio["person2"] = str(audio2)
+
+            elif multi_mode == "right-left":
+                input_payload["audio_type"] = "add"
+                cond_audio["person1"] = str(audio2)
+                cond_audio["person2"] = str(audio1)
+
+        input_json = "/tmp/input.json"
         with open(input_json, "w", encoding="utf-8") as f:
             json.dump(input_payload, f, ensure_ascii=False)
 
-        # ---- output path ----
-        output_base = "/tmp/output"     # ไม่ใส่ .mp4 ที่ argument
+        # ---- output ----
+        output_base = "/tmp/output"
         output_path = output_base + ".mp4"
 
-        # ---- อาร์กิวเมนต์เฉพาะโหมด ----
-        clip_args = []
-        streaming_args = []
+        # ---- args สำหรับ clip / streaming ----
+        clip_args, streaming_args = [], []
         if mode == "clip":
             frame_num = nearest_4n_plus_1_leq(max_frames)
             clip_args = ["--frame_num", str(frame_num)]
         else:
             streaming_args = ["--max_frame_num", str(max_frames)]
 
-        # ---- รัน InfiniteTalk พร้อม log error เต็ม ๆ ----
+        # ---- run InfiniteTalk ----
         cmd = [
             "python", "generate_infinitetalk.py",
             "--ckpt_dir", WAN_CKPT_DIR,
@@ -129,12 +143,6 @@ class Predictor(BasePredictor):
             print("[ERROR] generate_infinitetalk.py failed")
             print("STDOUT:\n", e.stdout)
             print("STDERR:\n", e.stderr)
-            # hint เช็คไฟล์/โฟลเดอร์หลัก ๆ
-            print("\n[HINT] ตรวจสอบว่า weights/ ทั้งหมดมีจริงไหม:")
-            print(" -", WAN_CKPT_DIR)
-            print(" -", WAV2VEC_DIR)
-            print(" -", ckpt)
-            print("[HINT] และดูว่า /tmp/input.json มีคีย์ 'cond_video' และ 'cond_audio' ตามตัวอย่างหรือไม่")
             raise
 
         return Path(output_path)
