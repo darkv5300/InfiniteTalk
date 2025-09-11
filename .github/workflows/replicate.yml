@@ -12,8 +12,6 @@ jobs:
 
       - name: Setup Cog
         uses: replicate/setup-cog@v1
-        with:
-          cache: false   # ปิด cache กัน error 400
 
       - name: Push to Replicate
         env:
