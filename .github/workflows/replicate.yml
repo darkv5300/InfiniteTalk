@@ -1,4 +1,5 @@
-name: Push to Replicate
+# .github/workflows/replicate.yml
+name: Push InfiniteTalk to Replicate
 on:
   push:
     branches: [ "main" ]
@@ -7,39 +8,13 @@ jobs:
   replicate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Setup Cog
+        uses: replicate/setup-cog@v1
         with:
-          python-version: '3.10'
+          token: ${{ secrets.REPLICATE_API_TOKEN }}
       
-      - name: Install Cog
+      - name: Push to Replicate
         run: |
-          sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
-          sudo chmod +x /usr/local/bin/cog
-          cog --version
-      
-      - name: Build and Push
-        env:
-          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-        run: |
-          # ตรวจสอบไฟล์ที่มี
-          echo "Files in directory:"
-          ls -la
-          
-          # ตรวจสอบว่ามี cog.yaml
-          if [ ! -f "cog.yaml" ]; then
-            echo "Error: cog.yaml not found!"
-            exit 1
-          fi
-          
-          # ตรวจสอบว่ามี predict.py
-          if [ ! -f "predict.py" ]; then
-            echo "Error: predict.py not found!"
-            exit 1
-          fi
-          
-          # Push to Replicate
-       cog push r8.im/darkv5300/adverratalk
+          cog push r8.im/darkv5300/adverratalk
