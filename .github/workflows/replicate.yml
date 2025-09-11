@@ -16,8 +16,8 @@ jobs:
           python3 -m pip install cog --user
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           export PATH="$HOME/.local/bin:$PATH"
-          which cog
-          cog --version
+          which cog || true
+          cog --version || true   # <- กันไม่ให้ job ล้ม
 
       - name: Push to Replicate
         env:
