@@ -1,36 +1,45 @@
-name: Push InfiniteTalk to Replicate
-
+name: Push to Replicate
 on:
   push:
-    branches: [ "main" ]   # จะรันทุกครั้งที่ push ไปที่ main
+    branches: [ "main" ]
 
 jobs:
   replicate:
     runs-on: ubuntu-latest
-
     steps:
-      # ดึงโค้ดจาก repo
-      - uses: actions/checkout@v4
-
-      # ติดตั้ง cog
-      - name: Install cog
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install Cog
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install cog --user
-          
-          # เพิ่ม path ของ cog เข้าไป
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.local/bin:$PATH"
-
-          # debug: เช็คว่า cog ติดตั้งแล้ว
-          which cog || true
-          cog --version || true
-
-      # push ไปที่ Replicate
-      - name: Push to Replicate
+          sudo curl -o /usr/local/bin/cog -L "https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)"
+          sudo chmod +x /usr/local/bin/cog
+          cog --version
+      
+      - name: Build and Push
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          cog login --token $REPLICATE_API_TOKEN
+          # ตรวจสอบไฟล์ที่มี
+          echo "Files in directory:"
+          ls -la
+          
+          # ตรวจสอบว่ามี cog.yaml
+          if [ ! -f "cog.yaml" ]; then
+            echo "Error: cog.yaml not found!"
+            exit 1
+          fi
+          
+          # ตรวจสอบว่ามี predict.py
+          if [ ! -f "predict.py" ]; then
+            echo "Error: predict.py not found!"
+            exit 1
+          fi
+          
+          # Push to Replicate
           cog push r8.im/darkv5300/adverratalk
