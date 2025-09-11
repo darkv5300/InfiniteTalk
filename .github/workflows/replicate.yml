@@ -10,20 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Cog manually
+      - name: Install Cog
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install cog --user
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.local/bin:$PATH"
-          ls -l $HOME/.local/bin || true   # debug: ดูว่า cog ลงที่นี่จริงมั้ย
-          which cog || true
-          cog --version || true
+          pip install cog
+          echo "PATH after pip install:"
+          echo $PATH
+          which cog
+          cog --version
 
       - name: Push to Replicate
         env:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+          PATH: /home/runner/.local/bin:/usr/local/bin:/usr/bin:/bin
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          $HOME/.local/bin/cog login --token $REPLICATE_API_TOKEN
-          $HOME/.local/bin/cog push r8.im/darkv5300/adverratalk
+          echo "PATH before push:"
+          echo $PATH
+          which cog
+          cog login --token $REPLICATE_API_TOKEN
+          cog push r8.im/darkv5300/adverratalk
