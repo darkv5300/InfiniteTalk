@@ -2,14 +2,27 @@ from cog import BasePredictor, Input, Path
 import tempfile
 import subprocess
 import json
-
+import os
 
 class Predictor(BasePredictor):
     def setup(self):
-        """โหลดโมเดล (แค่เตรียม path ไว้)"""
+        """โหลดโมเดล (เตรียม path + เช็ค lib เสริม)"""
         self.ckpt_dir = "weights/Wan2.1-I2V-14B-480P"
         self.wav2vec_dir = "weights/chinese-wav2vec2-base"
         self.infinitetalk_dir = "weights/InfiniteTalk/single/infinitetalk.safetensors"
+
+        # optional speed-up libs
+        try:
+            import xformers  # noqa
+            print("✅ xformers loaded")
+        except ImportError:
+            print("⚠️ xformers not found, running slower")
+
+        try:
+            import flash_attn  # noqa
+            print("✅ flash-attn loaded")
+        except ImportError:
+            print("⚠️ flash-attn not found, continuing without it")
 
     def predict(
         self,
@@ -62,6 +75,10 @@ class Predictor(BasePredictor):
             "--save_file", output_path,
         ]
 
-        subprocess.run(cmd, check=True)
+        print(f"🚀 Running command: {' '.join(cmd)}")
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"❌ Model execution failed: {e}")
 
         return Path(output_path)
