@@ -1,8 +1,13 @@
 build:
   gpu: true
-  cuda: "11.8"
   python_version: "3.10"
-  python_requirements: requirements.txt
+  python_packages: requirements.txt
   system_packages:
+    - ffmpeg
+    - libsm6
+    - libxext6
+    - libsndfile1
+    - build-essential
+    - python3-dev
+    - libgl1
     - git
-    - ninja-build
