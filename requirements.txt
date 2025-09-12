@@ -1,12 +1,11 @@
 torch==2.1.2
 torchvision==0.16.2
-torchaudio==2.1.2
-
 transformers==4.36.2
 diffusers==0.24.0
-huggingface_hub==0.19.4
-
+huggingface_hub==0.14.1
 einops==0.6.1
-accelerate==0.25.0
-safetensors==0.4.0
 
+# optional speed-up
+xformers==0.0.23
+ninja==1.11.1
+flash-attn==2.5.6
