@@ -1,5 +1,14 @@
 build:
+  gpu: true
   python_version: "3.10"
   python_packages:
-    - diffusers==0.24.0
-    - huggingface_hub==0.14.1
+    - -r requirements.txt
+  system_packages:
+    - ffmpeg
+    - libsm6
+    - libxext6
+    - libsndfile1
+    - build-essential
+    - python3-dev
+    - libgl1
+    - git
