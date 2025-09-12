@@ -1,8 +1,7 @@
-torch==2.1.0
-torchvision==0.16.0
-torchaudio==2.1.0
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
 
-# core libs
 opencv-python
 moviepy
 librosa
@@ -14,8 +13,6 @@ accelerate
 transformers
 diffusers
 easydict
-
-# extra for InfiniteTalk
 xformers
 ninja
 psutil
