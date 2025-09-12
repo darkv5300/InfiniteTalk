@@ -2,6 +2,6 @@ build:
   gpu: true
   cuda: "11.8"
   python_version: "3.10"
-  python_requirements: requirements.txt   # 👈 ตรงนี้จะ auto install ให้
+  python_requirements: requirements.txt   # Cog จะ auto install ให้
 
 predict: "predict.py:Predictor"
