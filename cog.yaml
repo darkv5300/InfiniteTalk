@@ -2,7 +2,6 @@ build:
   gpu: true
   cuda: "11.8"
   python_version: "3.10"
-  run:
-    - pip install --no-cache-dir -r requirements.txt
+  python_requirements: requirements.txt   # 👈 บอกตรงนี้ให้ใช้ไฟล์ requirements.txt
 
 predict: "predict.py:Predictor"
