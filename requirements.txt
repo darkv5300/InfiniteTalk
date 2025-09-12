@@ -4,10 +4,6 @@ torchaudio==2.1.0
 
 transformers==4.43.3
 diffusers==0.28.0
-xformers==0.0.28
-flash-attn==2.7.4.post1
-ninja
-
 accelerate==0.30.1
 safetensors==0.4.3
 sentencepiece==0.1.99
@@ -20,7 +16,5 @@ opencv-python==4.9.0.80
 soundfile==0.12.1
 librosa==0.10.1
 moviepy==1.0.3
-psutil
-packaging
 
 easydict==1.13
