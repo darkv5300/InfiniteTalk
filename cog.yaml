@@ -3,5 +3,7 @@ build:
   cuda: "11.8"
   python_version: "3.10"
   python_requirements: requirements.txt
+  run:
+    - pip install -r requirements.txt
 
 predict: "predict.py:Predictor"
