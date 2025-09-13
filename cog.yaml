@@ -1,7 +1,7 @@
 build:
   gpu: true
   python_version: "3.10"
-  packages:
+  system_packages:
     - ffmpeg
     - libgl1
   python_packages:
@@ -14,3 +14,5 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
+
+predict: "predictor.py:Predictor"
