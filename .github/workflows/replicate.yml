@@ -24,4 +24,4 @@ jobs:
         run: pip install cog
 
       - name: Deploy to Replicate
-        run: cog push r8.im/<USERNAME>/<MODEL_NAME>
+        run: cog push r8.im/darkv5300/adverratalk2
