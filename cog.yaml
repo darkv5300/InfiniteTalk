@@ -1,18 +1,21 @@
 build:
-  gpu: true
   python_version: "3.10"
-  system_packages:
-    - ffmpeg
-    - libgl1
-    - git
   python_packages:
-    - torch==2.3.1
-    - torchvision==0.18.1
-    - transformers==4.42.3
-    - diffusers==0.29.2
-    - einops==0.8.0
-    - huggingface-hub==0.24.0
-    - accelerate==0.33.0
-    - safetensors==0.4.3
-    - easydict==1.13
+    - "torch==2.4.1+cu121"
+    - "torchvision==0.19.1+cu121"
+    - "torchaudio==2.4.1+cu121"
+    - "xfuser>=0.4.1"  # เพิ่ม xfuser สำหรับ Wan2.1
+    - "xformers==0.0.28+cu121"
+    - "flash_attn==2.7.4.post1"
+    - "transformers>=4.44.0"  # สำหรับ Wav2Vec2
+    - "librosa>=0.10.1"
+    - "soundfile>=0.12.1"
+    - "pyloudnorm>=0.1.1"
+    - "einops>=0.8.0"
+    - "modelscope>=1.18.0"  # สำหรับ weights จาก Hugging Face
+    - "huggingface_hub>=0.24.6"  # สำหรับดาวน์โหลด weights
+  system_packages:
+    - "ffmpeg"  # สำหรับ audio/video processing
+  gpu: true  # ใช้ T4 หรือ A100 (24GB+ สำหรับ Wan2.1-14B)
+  cuda: "12.1"  # ต้องตรงกับ PyTorch
 predict: "predict.py:Predictor"
