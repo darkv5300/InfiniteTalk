@@ -1,5 +1,18 @@
 build:
-  python_version: "3.11"
-  python_requirements: requirements.txt
-  run:
-    - pip install --upgrade pip
+  gpu: true
+  python_version: "3.10"
+  system_packages:
+    - ffmpeg
+    - libgl1
+  python_packages:
+    - torch==2.1.1
+    - torchvision==0.18.1
+    - transformers==4.42.3
+    - diffusers==0.29.2
+    - einops==0.8.0
+    - huggingface-hub==0.24.0
+    - accelerate==0.33.0
+    - safetensors==0.4.3
+    - easydict==1.13
+
+predict: "predictor.py:Predictor"
