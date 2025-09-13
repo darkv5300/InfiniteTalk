@@ -1,6 +1,9 @@
 build:
   gpu: true
   python_version: "3.10"
+  apt_packages:
+    - ffmpeg
+    - libgl1
   python_packages:
     - torch==2.1.1
     - torchvision==0.18.1
@@ -11,6 +14,3 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
-
-run:
-  - apt-get update && apt-get install -y ffmpeg libgl1
