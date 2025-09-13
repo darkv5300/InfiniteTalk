@@ -2,7 +2,7 @@ build:
   gpu: true
   python_version: "3.10"
   python_packages:
-    - torch==2.3.1
+    - torch==2.1.1
     - torchvision==0.18.1
     - transformers==4.42.3
     - diffusers==0.29.2
@@ -11,10 +11,4 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
-    - xformers==0.0.23.post1
-    - flash-attn --no-build-isolation
-
-system_packages:
-  - git
-  - build-essential
-  - python3-dev
+    - git+https://github.com/MeiGen-AI/xfuser.git
