@@ -1,21 +1,24 @@
 build:
-  python_version: "3.10"
-  python_packages:
-    - "torch==2.4.1+cu121"
+  python_version: "3.10"  # ใช้ Python 3.10 เหมือนในข้อผิดพลาด
+  python_packages:  # รายการแพ็กเกจที่ต้องติดตั้ง
+    - "torch==2.4.1+cu121"  # PyTorch สำหรับ CUDA 12.1
     - "torchvision==0.19.1+cu121"
     - "torchaudio==2.4.1+cu121"
-    - "xfuser>=0.4.1"  # เพิ่ม xfuser สำหรับ Wan2.1
-    - "xformers==0.0.28+cu121"
+    - "xfuser>=0.4.1"  # แก้ปัญหา xfuser
+    - "xformers==0.0.27.post1+cu121 --index-url https://download.pytorch.org/whl/cu121"  # ใช้เวอร์ชันที่มี + index URL
     - "flash_attn==2.7.4.post1"
     - "transformers>=4.44.0"  # สำหรับ Wav2Vec2
     - "librosa>=0.10.1"
     - "soundfile>=0.12.1"
     - "pyloudnorm>=0.1.1"
     - "einops>=0.8.0"
-    - "modelscope>=1.18.0"  # สำหรับ weights จาก Hugging Face
-    - "huggingface_hub>=0.24.6"  # สำหรับดาวน์โหลด weights
-  system_packages:
-    - "ffmpeg"  # สำหรับ audio/video processing
-  gpu: true  # ใช้ T4 หรือ A100 (24GB+ สำหรับ Wan2.1-14B)
-  cuda: "12.1"  # ต้องตรงกับ PyTorch
-predict: "predict.py:Predictor"
+    - "modelscope>=1.18.0"
+    - "huggingface_hub>=0.24.6"
+  system_packages:  # โปรแกรมที่ต้องติดตั้งในระบบ
+    - "ffmpeg"  # สำหรับประมวลผลวิดีโอและเสียง
+  gpu: true  # ต้องมี GPU
+  cuda: "12.1"  # ใช้ CUDA 12.1
+  run:  # คำสั่งที่รันตอน build
+    - "pip install --upgrade pip"  # อัปเดต pip ก่อน
+    - "pip install --no-cache-dir -r requirements.txt"  # ติดตั้งจาก requirements.txt ถ้ามี
+predict: "predict.py:Predictor"  # ชี้ไปที่คลาสใน predict.py
