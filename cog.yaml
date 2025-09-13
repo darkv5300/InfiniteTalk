@@ -11,7 +11,10 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
+    - xformers==0.0.23.post1
+    - flash-attn --no-build-isolation
 
-run:
-  - pip install xformers==0.0.23.post1 --index-url https://download.pytorch.org/whl/cu121
-  - pip install flash-attn --no-build-isolation
+system_packages:
+  - git
+  - build-essential
+  - python3-dev
