@@ -11,5 +11,4 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
-    - xfuser
-predict: "predict.py:Predictor"
+    - git+https://github.com/MeiGen-AI/xfuser.git
