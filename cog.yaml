@@ -11,3 +11,5 @@ build:
     - accelerate==0.33.0
     - safetensors==0.4.3
     - easydict==1.13
+
+predict: "predict.py:Predictor"
