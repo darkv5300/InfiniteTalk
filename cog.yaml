@@ -1,7 +1,7 @@
 build:
   gpu: true
   python_version: "3.10"
-  apt_packages:
+  system_packages:
     - ffmpeg
     - libgl1
   python_packages:
