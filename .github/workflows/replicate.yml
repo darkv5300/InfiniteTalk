@@ -12,21 +12,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # เคลียร์ pip cache กัน dependency recursion error
       - name: Clear pip cache
         run: rm -rf ~/.cache/pip
 
+      # ติดตั้ง Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
+      # ติดตั้ง Cog (จาก Replicate)
       - name: Install Cog
         run: |
-          sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-          sudo chmod +x /usr/local/bin/cog
+          curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)
+          chmod +x /usr/local/bin/cog
           cog --version
 
+      # Login เข้า Replicate
+      - name: Cog login
+        run: echo "${{ secrets.REPLICATE_API_TOKEN }}" | cog login --token-stdin
+
+      # Push โมเดลขึ้น Replicate
       - name: Deploy to Replicate
-        run: |
-          cog login --token ${{ secrets.REPLICATE_API_TOKEN }}
-          cog push r8.im/darkv5300/adverratalk2
+        run: cog push r8.im/darkv5300/adverratalk2
